@@ -23,3 +23,14 @@
 #define NVIC_ST_CTRL_R          (*((volatile uint32_t *)0xE000E010))
 #define NVIC_ST_RELOAD_R        (*((volatile uint32_t *)0xE000E014))
 #define NVIC_ST_CURRENT_R       (*((volatile uint32_t *)0xE000E018))
+
+// LCD control functions
+void LCD_init();
+void LCD_Cmd(char command);
+void LCD_Data(char data);
+
+void LCD_init(void) {}
+
+void LCD_Cmd(char command) {}
+
+void LCD_Data(char data) {}
