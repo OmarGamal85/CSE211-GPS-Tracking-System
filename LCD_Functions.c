@@ -24,6 +24,9 @@
 #define NVIC_ST_RELOAD_R        (*((volatile uint32_t *)0xE000E014))
 #define NVIC_ST_CURRENT_R       (*((volatile uint32_t *)0xE000E018))
 
+void LCD_Cmd(char command);
+void LCD_Data(char data);
+
 // initializing the LCD pins 
 
 void LCD_init(void) {
@@ -38,3 +41,17 @@ void LCD_init(void) {
   GPIO_PORTA_AFSEL_R = 0X00;
   GPIO_PORTA_PCTL_R = 0X00;
   GPIO_PORTA_CR_R = 0X00;
+  
+  
+
+  
+void LCD_Cmd(char command){
+  
+
+}
+  
+  
+void LCD_Data(char data) {
+
+
+}
