@@ -1,4 +1,4 @@
-// #include "tm4c123gh6pm.h"
+#include "tm4c123gh6pm.h"
 
 void setup() {
   // Testing
@@ -6,6 +6,6 @@ void setup() {
 }
 void loop() {
   // Testing
-  Serial.println("Hello");
+  Serial.println("Hello, world");
 
 }
