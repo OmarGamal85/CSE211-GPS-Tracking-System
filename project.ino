@@ -4,10 +4,6 @@ char Total_Time[] = "389";
 char Current_velocity[] = "5";
 char Angle[] = "258" ;
 
-void setup() {
-
-}
-void loop() {
-
-
+void main(){
+  
 }
