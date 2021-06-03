@@ -1,11 +1,13 @@
-#include "tm4c123gh6pm.h"
+// Dummy Data
+char Total_Dis[] = "107";
+char Total_Time[] = "389";
+char Current_velocity[] = "5";
+char Angle[] = "258" ;
 
 void setup() {
-  // Testing
-  Serial.begin(9600);
+
 }
 void loop() {
-  // Testing
-  Serial.println("Hello, world");
+
 
 }
