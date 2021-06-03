@@ -1,11 +1,6 @@
-#include "tm4c123gh6pm.h"
+#include "LCD_Functions.c"
 
-void setup() {
-  // Testing
-  Serial.begin(9600);
+void main(){
+  LCD_init();
 }
-void loop() {
-  // Testing
-  Serial.println("Hello, world");
 
-}
