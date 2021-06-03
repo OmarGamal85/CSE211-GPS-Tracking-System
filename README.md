@@ -6,5 +6,5 @@
 ### TEST 3 
 ```cpp
 cout << "GPS Tracking System!"
-string s = "Hello, world!"
+string s = "Hello, world and evary body!"
 ```
