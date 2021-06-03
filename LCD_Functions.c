@@ -23,3 +23,18 @@
 #define NVIC_ST_CTRL_R          (*((volatile uint32_t *)0xE000E010))
 #define NVIC_ST_RELOAD_R        (*((volatile uint32_t *)0xE000E014))
 #define NVIC_ST_CURRENT_R       (*((volatile uint32_t *)0xE000E018))
+
+// initializing the LCD pins 
+
+void LCD_init(void) {
+
+  SYSCTL_RCGCGPIO_R |= 0X03;
+  while (!(SYSCTL_PRGPIO_R & 0X03)) {};
+
+  // LCD Control Port intialization
+  GPIO_PORTA_DIR_R |= 0XE0;
+  GPIO_PORTA_DEN_R |= 0XE0;
+  GPIO_PORTA_AMSEL_R = 0X00;
+  GPIO_PORTA_AFSEL_R = 0X00;
+  GPIO_PORTA_PCTL_R = 0X00;
+  GPIO_PORTA_CR_R = 0X00;
