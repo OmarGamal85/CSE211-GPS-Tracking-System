@@ -1,57 +1,92 @@
+#include "tm4c123gh6pm.h"
 #include <stdint.h>
 
-/* define registers memory location */
-#define SYSCTL_RCGCGPIO_R       (*((volatile uint32_t *)0x400FE608))
-#define SYSCTL_PRGPIO_R         (*((volatile uint32_t *)0x400FEA08))
 
-#define GPIO_PORTA_DIR_R        (*((volatile uint32_t *)0x40004400))
-#define GPIO_PORTA_DEN_R        (*((volatile uint32_t *)0x4000451C))
-#define GPIO_PORTA_DATA_R       (*((volatile uint32_t *)0x400043FC))
-#define GPIO_PORTA_AMSEL_R      (*((volatile uint32_t *)0x40004528))
-#define GPIO_PORTA_AFSEL_R      (*((volatile uint32_t *)0x40004420))
-#define GPIO_PORTA_PCTL_R       (*((volatile uint32_t *)0x4000452C))
-#define GPIO_PORTA_CR_R         (*((volatile uint32_t *)0x40004524))
+void LCD_init();
+void LCD_command(char command);
+void LCD_data(char data);
+void LCD_clear();
+void LCD_set_Cursor(int line, int block);
+void LCD_delay(int time);
 
-#define GPIO_PORTB_DIR_R        (*((volatile uint32_t *)0x40005400))
-#define GPIO_PORTB_DEN_R        (*((volatile uint32_t *)0x4000551C))
-#define GPIO_PORTB_DATA_R       (*((volatile uint32_t *)0x400053FC))
-#define GPIO_PORTB_AMSEL_R      (*((volatile uint32_t *)0x40005528))
-#define GPIO_PORTB_AFSEL_R      (*((volatile uint32_t *)0x40005420))
-#define GPIO_PORTB_PCTL_R       (*((volatile uint32_t *)0x4000552C))
-#define GPIO_PORTB_CR_R         (*((volatile uint32_t *)0x40005524))
 
-#define NVIC_ST_CTRL_R          (*((volatile uint32_t *)0xE000E010))
-#define NVIC_ST_RELOAD_R        (*((volatile uint32_t *)0xE000E014))
-#define NVIC_ST_CURRENT_R       (*((volatile uint32_t *)0xE000E018))
 
-void LCD_Cmd(char command);
-void LCD_Data(char data);
+/* initializes the ports A for commands (3 pins), B for data (8 pins)*/
+void LCD_init(){
+    // Rs   -> A5
+    // Rw   -> A6
+    // E    -> A7
+    // Data -> (B0 - B7)
 
-// initializing the LCD pins 
+    // Clock
+    SYSCTL_RCGCGPIO_R = 0X03;               // 0000 0011
+    while(!(SYSCTL_PRGPIO_R & 0X03));
 
-void LCD_init(void) {
+    // Direction and Digital
+    GPIO_PORTA_DIR_R = 0XE0;                // 1110 0000 (Rs, Rw, E)
+    GPIO_PORTA_DEN_R = 0XE0;                 
+    GPIO_PORTB_DIR_R = 0XFF;                // 1111 1111
+    GPIO_PORTB_DEN_R = 0XFF;
 
-  SYSCTL_RCGCGPIO_R |= 0X03;
-  while (!(SYSCTL_PRGPIO_R & 0X03)) {};
+    // Use 8 bits
+    LCD_command(0X38);
+    
+    // Clear the LCD
+    LCD_clear();
 
-  // LCD Control Port intialization
-  GPIO_PORTA_DIR_R |= 0XE0;
-  GPIO_PORTA_DEN_R |= 0XE0;
-  GPIO_PORTA_AMSEL_R = 0X00;
-  GPIO_PORTA_AFSEL_R = 0X00;
-  GPIO_PORTA_PCTL_R = 0X00;
-  GPIO_PORTA_CR_R = 0X00;
-  
-  
+    // Return home
+    LCD_command(0X02);
+}
 
-  
-void LCD_Cmd(char command){
-  
+/* Takes the hexacode of the command */
+void LCD_command(char command){
+    GPIO_PORTA_DATA_R = 0X00;
+
+    // Sends the commands into the data ports (B)
+    GPIO_PORTB_DATA_R = command;
+
+    // Sets and resets the enable, because the enable works only in the falling edge
+    GPIO_PORTA_DATA_R = 0X80;
+    LCD_delay(3);
+    GPIO_PORTA_DATA_R = 0X00;
 
 }
-  
-  
-void LCD_Data(char data) {
+
+/* Takes the hexacode of the data */
+void LCD_data(char data){
+    // Sets the Rs
+    GPIO_PORTA_DATA_R = 0X20;
+    // Sends the data into the data ports (B)
+    GPIO_PORTB_DATA_R = data;
+
+    GPIO_PORTA_DATA_R |= 0X80;
+    LCD_delay(3);
+    GPIO_PORTA_DATA_R = 0X00;
+
+}
+
+void LCD_clear(){
+    LCD_command(0X01);
+}
+
+// Takes a line (0, 1) and a block(0, 15)
+void LCD_set_Cursor(int line, int block){
+    if(line == 0){
+        LCD_command(0X80 + block);
+    }
+    else if (line == 1){
+        LCD_command(0xC0 + block);
+    }
+}
 
 
+void LCD_delay(int milliseconds){
+    for (int i = 0; i < milliseconds; i++)
+    {
+        for (int j = 0; j < 3180; j++)
+        {
+            
+        }
+        
+    }
 }
